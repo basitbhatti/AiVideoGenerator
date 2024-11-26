@@ -23,8 +23,6 @@ interface TextApi {
         @Body textPrompt: TextRequestBody
     ): Response<InitialResponse>
 
-
-
     @Headers(
         "x-rapidapi-key: $API_KEY",
         "x-rapidapi-host: runwayml.p.rapidapi.com",

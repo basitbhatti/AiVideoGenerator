@@ -6,7 +6,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.foundation.layout.Column
-import com.basitbhatti.videogenerator.model.TextRequestBody
+import com.basitbhatti.videogenerator.ui.HomeScreen
 import com.basitbhatti.videogenerator.ui.theme.AiVideoGeneratorTheme
 import com.basitbhatti.videogenerator.utils.NetworkResponse
 import com.basitbhatti.videogenerator.viewmodel.MainViewModel
@@ -22,7 +22,8 @@ class MainActivity : ComponentActivity() {
                 Column {
 
                     val viewModel by viewModels<MainViewModel>()
-                    viewModel.sendTextRequest(TextRequestBody("A horse running in the fields of UK countryside."))
+
+                    HomeScreen(viewModel = viewModel)
 
                     viewModel.response.observe(this@MainActivity){ response->
                         when(response){
