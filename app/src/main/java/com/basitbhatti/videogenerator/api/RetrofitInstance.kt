@@ -9,7 +9,7 @@ object RetrofitInstance {
 
     var INSTANCE : Retrofit? = null
 
-    fun getTextRequestInstance(): Retrofit {
+    fun getRequestInstance(): Retrofit {
         if (INSTANCE == null){
             synchronized(this){
                INSTANCE = Retrofit.Builder()
@@ -21,7 +21,6 @@ object RetrofitInstance {
         return INSTANCE!!
     }
 
-    val textApi = getTextRequestInstance().create(TextApi::class.java)
-
+    val textApi = getRequestInstance().create(TextApi::class.java)
 
 }
