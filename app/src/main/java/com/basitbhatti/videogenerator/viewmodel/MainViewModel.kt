@@ -26,18 +26,19 @@ class MainViewModel : ViewModel() {
                 val response = textApi.sendTextRequest(body)
                 val initialResponse = response.body()
                 if (initialResponse != null) {
+                    Log.d("TAGRESPONSE", "initialResponse : ${initialResponse}")
 
                     val status = textApi.getStatus(initialResponse.uuid)
                     if (status.body() != null) {
                         _response.value = NetworkResponse.Success(status.body()!!)
                     } else {
-                        Log.d("TAGRESPONSE", "status error : ${status.errorBody()}")
+                        Log.d("TAGRESPONSE", "status error : ${status}")
                         _response.value = NetworkResponse.Error("Something went wrong.")
                     }
 
 
                 } else {
-                    Log.d("TAGRESPONSE", "initial error : ${response.errorBody()}}")
+                    Log.d("TAGRESPONSE", "initial error : ${response}}")
                     _response.value = NetworkResponse.Error("Something went wrong.")
                 }
 

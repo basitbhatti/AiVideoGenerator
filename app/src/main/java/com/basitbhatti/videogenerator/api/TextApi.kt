@@ -23,6 +23,13 @@ interface TextApi {
         @Body textPrompt: TextRequestBody
     ): Response<InitialResponse>
 
+
+
+    @Headers(
+        "x-rapidapi-key: $API_KEY",
+        "x-rapidapi-host: runwayml.p.rapidapi.com",
+        "Content-Type: application/json"
+    )
     @GET("/status")
     suspend fun getStatus(
         @Query("uuid") uuid: String
