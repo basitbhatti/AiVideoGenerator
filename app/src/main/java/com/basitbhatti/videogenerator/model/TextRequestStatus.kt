@@ -1,6 +1,6 @@
 package com.basitbhatti.videogenerator.model
 
-data class TextRequestStatusResponse(
+data class TextRequestStatus(
     val gif_url: String,
     val progress: Int,
     val status: String,

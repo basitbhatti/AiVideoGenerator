@@ -2,6 +2,7 @@ package com.basitbhatti.videogenerator.api
 
 import com.basitbhatti.videogenerator.model.InitialResponse
 import com.basitbhatti.videogenerator.model.TextRequestBody
+import com.basitbhatti.videogenerator.model.TextRequestStatus
 import com.basitbhatti.videogenerator.utils.API_KEY
 import retrofit2.Response
 import retrofit2.http.Body
@@ -25,6 +26,6 @@ interface TextApi {
     @GET("/status")
     suspend fun getStatus(
         @Query("uuid") uuid: String
-    )
+    ) : Response<TextRequestStatus>
 
 }

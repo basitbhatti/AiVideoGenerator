@@ -1,17 +1,15 @@
 package com.basitbhatti.videogenerator
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.activity.viewModels
+import androidx.compose.foundation.layout.Column
+import com.basitbhatti.videogenerator.model.TextRequestBody
 import com.basitbhatti.videogenerator.ui.theme.AiVideoGeneratorTheme
+import com.basitbhatti.videogenerator.utils.NetworkResponse
+import com.basitbhatti.videogenerator.viewmodel.MainViewModel
 
 class MainActivity : ComponentActivity() {
 
@@ -21,14 +19,23 @@ class MainActivity : ComponentActivity() {
         setContent {
             AiVideoGeneratorTheme {
 
+                Column {
 
+                    val viewModel by viewModels<MainViewModel>()
+                    viewModel.sendTextRequest(TextRequestBody("A horse running in the fields of UK countryside."))
 
+                    viewModel.response.observe(this@MainActivity){ response->
+                        when(response){
+                            is NetworkResponse.Success -> Log.d("TAGRESPONSE", "${response.data}")
+                            is NetworkResponse.Error -> Log.d("TAGRESPONSE", "${response.message}")
+                            is NetworkResponse.Loading -> Log.d("TAGRESPONSE", "Sending Request...")
+                        }
+                    }
 
+                }
             }
         }
     }
-
-
 
 
 }
