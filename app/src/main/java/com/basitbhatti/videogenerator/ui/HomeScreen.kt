@@ -1,5 +1,6 @@
 package com.basitbhatti.videogenerator.ui
 
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -18,6 +19,7 @@ import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -32,6 +34,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.basitbhatti.videogenerator.R
 import com.basitbhatti.videogenerator.model.TextRequestBody
+import com.basitbhatti.videogenerator.utils.NetworkResponse
 import com.basitbhatti.videogenerator.viewmodel.MainViewModel
 
 @Composable
@@ -40,7 +43,16 @@ fun HomeScreen(
     viewModel: MainViewModel
 ) {
 
-    var showDialog by remember {
+    val response = viewModel.response.observeAsState()
+
+
+    var showErrorDialog by remember {
+        mutableStateOf(false)
+    }
+    var showSuccessDialog by remember {
+        mutableStateOf(false)
+    }
+    var showLoadingDialog by remember {
         mutableStateOf(false)
     }
 
@@ -98,28 +110,50 @@ fun HomeScreen(
                     .fillMaxWidth()
                     .padding(horizontal = 25.dp, vertical = 15.dp)
                     .height(50.dp),
-
                 onClick = {
                     if (prompt.isEmpty()) {
                         Toast.makeText(context, "Empty Prompt", Toast.LENGTH_SHORT)
                             .show()
                     } else {
                         viewModel.sendTextRequest(TextRequestBody(prompt))
-
-                        showDialog = true
                     }
                 }
             ) {
                 Text(text = "Generate Ai Video")
             }
 
-            CustomDialog(showDialog, onDismissRequest = {
-                showDialog = false
-            }) {
-                MessageDialog {
-                    showDialog = false
+            Log.d("TAGRESPONSE", "HomeScreen: ${response.value}")
+
+            when (response.value) {
+
+                is NetworkResponse.Error -> {
+                    showErrorDialog = true
+                    CustomDialog(showErrorDialog, onDismissRequest = {
+                        showErrorDialog = false
+                    }) {
+                        ErrorDialog {
+                            showErrorDialog = false
+                        }
+                    }
+                }
+
+//                is NetworkResponse.Loading -> {
+//                    showLoadingDialog = true
+//                    CustomDialog(showLoadingDialog, onDismissRequest = {
+//                        showLoadingDialog = false
+//                    }) {
+//                        ProgressDialog {
+//                            showLoadingDialog = false
+//                        }
+//                    }
+//                }
+
+                else -> {
+
                 }
             }
+
+
         }
     }
 

@@ -1,5 +1,9 @@
 package com.basitbhatti.videogenerator.ui
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectTapGestures
@@ -25,6 +29,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -38,7 +43,11 @@ fun CustomDialog(
     onDismissRequest: () -> Unit,
     content: @Composable () -> Unit,
 ) {
-    if (showDialog) {
+    AnimatedVisibility(
+        visible = showDialog,
+        enter = fadeIn(animationSpec = tween(durationMillis = 200)),
+        exit = fadeOut(animationSpec = tween(durationMillis = 200))
+    ) {
         Dialog(
             onDismissRequest = onDismissRequest, properties = DialogProperties(
                 usePlatformDefaultWidth = false
@@ -65,7 +74,9 @@ fun CustomDialog(
 }
 
 @Composable
-fun MessageDialog(modifier: Modifier = Modifier, onDismissRequest: () -> Unit) {
+fun ProgressDialog(
+    modifier: Modifier = Modifier, onDismissRequest: () -> Unit
+) {
     Card(
         modifier = modifier
             .fillMaxWidth()
@@ -77,10 +88,10 @@ fun MessageDialog(modifier: Modifier = Modifier, onDismissRequest: () -> Unit) {
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
 
-            Spacer(modifier = Modifier.height(25.dp))
+            Spacer(modifier = Modifier.height(50.dp))
 
             Image(
-                painter = painterResource(R.drawable.magic),
+                painter = painterResource(R.drawable.loading),
                 contentDescription = "",
                 modifier = Modifier.size(64.dp)
             )
@@ -88,34 +99,87 @@ fun MessageDialog(modifier: Modifier = Modifier, onDismissRequest: () -> Unit) {
             Spacer(modifier = Modifier.height(15.dp))
 
             Text(text = "Request in queue.", fontSize = 22.sp)
-            Text(text = "We will notify you when it's done.", fontSize = 14.sp)
+            Text(text = "We will notify you when it's done.", fontSize = 12.sp)
 
             Spacer(modifier = Modifier.height(15.dp))
 
-            Button(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 25.dp, vertical = 15.dp)
-                    .height(50.dp),
+            Button(modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 25.dp, vertical = 15.dp)
+                .height(50.dp),
 
                 onClick = {
                     onDismissRequest()
-                }
-            ) {
+                }) {
                 Text(text = "Okay")
             }
 
-            Spacer(modifier = Modifier.height(25.dp))
+            Spacer(modifier = Modifier.height(50.dp))
 
         }
-
     }
 }
 
+@Composable
+fun ErrorDialog(
+    modifier: Modifier = Modifier, onDismissRequest: () -> Unit
+) {
+    Card(
+        modifier = modifier
+            .fillMaxWidth()
+            .height(250.dp)
+    ) {
+
+        Column(
+            modifier = modifier.fillMaxSize(),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+
+            Spacer(modifier = Modifier.height(50.dp))
+
+            Image(
+                painter = painterResource(R.drawable.warning),
+                contentDescription = "",
+                modifier = Modifier.size(64.dp)
+            )
+
+            Spacer(modifier = Modifier.height(15.dp))
+
+            Text(text = "Something went wrong", fontSize = 22.sp)
+
+            Text(
+                text = "Unable to proceed with this request",
+                fontSize = 12.sp,
+                textAlign = TextAlign.Center
+            )
+
+            Spacer(modifier = Modifier.height(15.dp))
+
+            Button(modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 25.dp, vertical = 15.dp)
+                .height(50.dp),
+                onClick = {
+                    onDismissRequest()
+                }) {
+                Text(text = "Okay")
+            }
+
+            Spacer(modifier = Modifier.height(50.dp))
+
+        }
+    }
+}
 
 @Preview
 @Composable
 private fun Preview() {
     CustomDialog(true, {}) {
+        ErrorDialog {
+            {
+
+            }
+        }
     }
 }

@@ -18,6 +18,7 @@ interface TextApi {
         "x-rapidapi-host: runwayml.p.rapidapi.com",
         "Content-Type: application/json"
     )
+
     @POST("/generate/text")
     suspend fun sendTextRequest(
         @Body textPrompt: TextRequestBody

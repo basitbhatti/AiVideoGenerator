@@ -11,7 +11,7 @@ abstract class RequestDatabase : RoomDatabase() {
     abstract fun dao(): RequestDao
 
     companion object {
-        lateinit var INSTANCE: RequestDatabase
+        var INSTANCE: RequestDatabase? = null
 
         fun getInstance(context: Context): RequestDatabase {
             synchronized(this) {

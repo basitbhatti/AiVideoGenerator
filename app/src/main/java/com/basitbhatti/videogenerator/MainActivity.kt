@@ -1,14 +1,15 @@
 package com.basitbhatti.videogenerator
 
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.viewModels
 import androidx.compose.foundation.layout.Column
+import androidx.lifecycle.ViewModelProvider
+import com.basitbhatti.videogenerator.db.RequestDatabase
+import com.basitbhatti.videogenerator.repository.RequestRepository
 import com.basitbhatti.videogenerator.ui.HomeScreen
 import com.basitbhatti.videogenerator.ui.theme.AiVideoGeneratorTheme
-import com.basitbhatti.videogenerator.utils.NetworkResponse
+import com.basitbhatti.videogenerator.viewmodel.MainVMFactory
 import com.basitbhatti.videogenerator.viewmodel.MainViewModel
 
 class MainActivity : ComponentActivity() {
@@ -21,17 +22,15 @@ class MainActivity : ComponentActivity() {
 
                 Column {
 
-                    val viewModel by viewModels<MainViewModel>()
+                    val dao = RequestDatabase.getInstance(this@MainActivity).dao()
+                    val repo = RequestRepository(dao)
+
+                    val viewModel = ViewModelProvider(
+                        this@MainActivity,
+                        MainVMFactory(repo)
+                    ).get(MainViewModel::class.java)
 
                     HomeScreen(viewModel = viewModel)
-
-                    viewModel.response.observe(this@MainActivity){ response->
-                        when(response){
-                            is NetworkResponse.Success -> Log.d("TAGRESPONSE", "${response.data}")
-                            is NetworkResponse.Error -> Log.d("TAGRESPONSE", "${response.message}")
-                            is NetworkResponse.Loading -> Log.d("TAGRESPONSE", "Sending Request...")
-                        }
-                    }
 
                 }
             }
