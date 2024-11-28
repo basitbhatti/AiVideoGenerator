@@ -83,12 +83,11 @@ fun ProgressDialog(
             .height(250.dp)
     ) {
         Column(
-            modifier = modifier.fillMaxSize(),
+            modifier = modifier.fillMaxSize().height(250.dp),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
 
-            Spacer(modifier = Modifier.height(50.dp))
 
             Image(
                 painter = painterResource(R.drawable.loading),
@@ -114,7 +113,6 @@ fun ProgressDialog(
                 Text(text = "Okay")
             }
 
-            Spacer(modifier = Modifier.height(50.dp))
 
         }
     }
@@ -131,12 +129,10 @@ fun ErrorDialog(
     ) {
 
         Column(
-            modifier = modifier.fillMaxSize(),
+            modifier = modifier.fillMaxSize().height(250.dp),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-
-            Spacer(modifier = Modifier.height(50.dp))
 
             Image(
                 painter = painterResource(R.drawable.warning),
@@ -165,8 +161,6 @@ fun ErrorDialog(
                 }) {
                 Text(text = "Okay")
             }
-
-            Spacer(modifier = Modifier.height(50.dp))
 
         }
     }
