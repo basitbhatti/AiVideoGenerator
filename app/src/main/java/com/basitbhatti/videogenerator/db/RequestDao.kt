@@ -1,6 +1,5 @@
 package com.basitbhatti.videogenerator.db
 
-import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
@@ -21,6 +20,6 @@ interface RequestDao {
     suspend fun deleteRequest(item : TextRequest)
 
     @Query("SELECT * FROM request")
-    fun getRequests() : LiveData<List<TextRequest>>
+    fun getRequests() : List<TextRequest>
 
 }

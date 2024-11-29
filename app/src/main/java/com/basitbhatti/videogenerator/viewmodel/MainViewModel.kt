@@ -11,42 +11,51 @@ import com.basitbhatti.videogenerator.model.TextRequestBody
 import com.basitbhatti.videogenerator.repository.RequestRepository
 import com.basitbhatti.videogenerator.utils.STATUS_FAILED
 import com.basitbhatti.videogenerator.utils.STATUS_IN_QUEUE
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class MainViewModel(val repository : RequestRepository) : ViewModel() {
+class MainViewModel(val repository: RequestRepository) : ViewModel() {
 
     val textApi = RetrofitInstance.textApi
 
-
     private var _list = MutableLiveData<List<TextRequest>>()
-    val listRequests : LiveData<List<TextRequest>> = _list
+    val listRequests: LiveData<List<TextRequest>> = _list
 
     fun sendTextRequest(body: TextRequestBody) {
-        viewModelScope.launch {
-
-            try {
-                val response = textApi.sendTextRequest(body)
-                val initialResponse = response.body()
-                if (initialResponse != null) {
-                    Log.d("TAGRESPONSE", "initialResponse : ${initialResponse}")
-
-                    val request = TextRequest(0, body.text_prompt, STATUS_IN_QUEUE, initialResponse.status, initialResponse.uuid)
-                    repository.insertRequest(request)
-
-                } else {
-                    Log.d("TAGRESPONSE", "initial error : ${response}}")
-                    val request = TextRequest(0, body.text_prompt, STATUS_FAILED, "", "")
-                    repository.insertRequest(request)
-
-                }
-
-            } catch (e: Exception) {
-                Log.d("TAGRESPONSE", "catch error : ${e}}")
-                val request = TextRequest(0, body.text_prompt, STATUS_FAILED, "", "")
-                repository.insertRequest(request)
-            }
+        viewModelScope.launch(Dispatchers.IO) {
+            val request = createRequest(body)
+            repository.insertRequest(request)
+            updateRequestList()
         }
     }
 
+
+    private suspend fun createRequest(body: TextRequestBody): TextRequest {
+        return try {
+            val response = textApi.sendTextRequest(body)
+            val initialResponse = response.body()
+            if (initialResponse != null) {
+                Log.d("TAGRESPONSE", "initialResponse : ${initialResponse}")
+                TextRequest(
+                    0,
+                    body.text_prompt,
+                    STATUS_IN_QUEUE,
+                    initialResponse.status,
+                    initialResponse.uuid
+                )
+
+            } else {
+                Log.d("TAGRESPONSE", "initial error : ${response}}")
+                TextRequest(0, body.text_prompt, STATUS_FAILED, "", "")
+            }
+        } catch (e: Exception) {
+            TextRequest(0, body.text_prompt, STATUS_FAILED, "", "")
+        }
+
+    }
+
+    private suspend fun updateRequestList() {
+        _list.postValue(repository.getRequests())
+    }
 
 }

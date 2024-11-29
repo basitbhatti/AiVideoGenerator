@@ -1,6 +1,5 @@
 package com.basitbhatti.videogenerator.repository
 
-import androidx.lifecycle.LiveData
 import com.basitbhatti.videogenerator.db.RequestDao
 import com.basitbhatti.videogenerator.db.TextRequest
 
@@ -14,7 +13,7 @@ class RequestRepository(val dao: RequestDao) {
         dao.deleteRequest(request)
     }
 
-    fun getRequests(): LiveData<List<TextRequest>> {
+    fun getRequests(): List<TextRequest> {
         return dao.getRequests()
     }
 

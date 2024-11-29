@@ -54,6 +54,7 @@ fun HomeScreen(
             .background(Color.White),
         contentAlignment = Alignment.Center
     ) {
+
         Column(
             modifier = Modifier.fillMaxWidth(),
             verticalArrangement = Arrangement.Center,
@@ -104,12 +105,12 @@ fun HomeScreen(
                             .show()
                     } else {
                         viewModel.sendTextRequest(TextRequestBody(prompt))
+                        showDialog = true
                     }
                 }
             ) {
                 Text(text = "Generate Ai Video")
             }
-
 
         }
     }
