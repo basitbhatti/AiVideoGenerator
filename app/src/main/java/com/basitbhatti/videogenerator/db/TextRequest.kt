@@ -4,11 +4,12 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 @Entity(tableName = "request")
-class TextRequest (
+class TextRequest(
     @PrimaryKey(autoGenerate = true)
-    val id : Int = 0,
-    val prompt : String,
-    val requestStatus : String,
+    val id: Int = 0,
+    val prompt: String,
+    val requestStatus: String,
     val status: String,
-    val uuid: String
+    val uuid: String,
+    val url: String? = null
 )
