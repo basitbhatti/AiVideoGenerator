@@ -112,6 +112,15 @@ fun HomeScreen(
                 Text(text = "Generate Ai Video")
             }
 
+            CustomDialog(
+                showDialog = showDialog,
+                onDismissRequest = { showDialog = false }
+            ) {
+                ProgressDialog {
+                    showDialog = false
+                }
+            }
+
         }
     }
 

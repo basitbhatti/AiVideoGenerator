@@ -98,7 +98,7 @@ fun ProgressDialog(
             Spacer(modifier = Modifier.height(15.dp))
 
             Text(text = "Request in queue.", fontSize = 22.sp)
-            Text(text = "We will notify you when it's done.", fontSize = 12.sp)
+            Text(text = "Your request has been sent", fontSize = 12.sp)
 
             Spacer(modifier = Modifier.height(15.dp))
 
