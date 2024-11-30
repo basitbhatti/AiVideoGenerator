@@ -29,7 +29,6 @@ class MainViewModel(val repository: RequestRepository) : ViewModel() {
         }
     }
 
-
     private suspend fun createRequest(body: TextRequestBody): TextRequest {
         return try {
             val response = textApi.sendTextRequest(body)

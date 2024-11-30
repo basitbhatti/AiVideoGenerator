@@ -5,6 +5,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.basitbhatti.videogenerator.ui.HomeScreen
+import com.basitbhatti.videogenerator.ui.QueueScreen
 import com.basitbhatti.videogenerator.viewmodel.MainViewModel
 
 @Composable
@@ -16,6 +17,9 @@ fun NavGraph(
     NavHost(navController = navController, startDestination = NavScreen.Home.route){
         composable(route = NavScreen.Home.route){
             HomeScreen(viewModel = viewModel)
+        }
+        composable(route = NavScreen.Queue.route){
+            QueueScreen(viewModel = viewModel)
         }
     }
 
