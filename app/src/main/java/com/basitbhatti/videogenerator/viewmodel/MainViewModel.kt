@@ -73,7 +73,7 @@ class MainViewModel(val repository: RequestRepository) : ViewModel() {
 
                         //in queue, success
 
-                        if (status.contains("in queue")){
+                        if (status.contains("in queue") or status.contains("submitted")){
                             req.requestStatus = STATUS_IN_QUEUE
                         } else if (status.contains("success")){
                             req.requestStatus = STATUS_SUCCESS
@@ -83,6 +83,7 @@ class MainViewModel(val repository: RequestRepository) : ViewModel() {
                         }
 
                         repository.updateRequest(req)
+                        Log.d("TAGSTATUS", "${item.uuid} : ${item.status}")
 
                     }
                 }
