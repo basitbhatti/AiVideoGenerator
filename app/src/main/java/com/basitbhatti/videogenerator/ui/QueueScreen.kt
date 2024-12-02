@@ -14,12 +14,14 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -34,42 +36,54 @@ import com.basitbhatti.videogenerator.db.TextRequest
 import com.basitbhatti.videogenerator.utils.STATUS_IN_QUEUE
 import com.basitbhatti.videogenerator.utils.STATUS_SUCCESS
 import com.basitbhatti.videogenerator.viewmodel.MainViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 @Composable
 fun QueueScreen(modifier: Modifier = Modifier, viewModel: MainViewModel) {
-    
-    val requests = viewModel.listRequests.observeAsState()
 
-
-    requests.value?.forEach {
-        Log.d("TAGRequests", "$it")
+    LaunchedEffect(Unit) {
+        CoroutineScope(Dispatchers.IO).launch {
+            viewModel.updateRequestList()
+        }
     }
 
-//    Column(
-//        modifier = Modifier.fillMaxSize()
-//    ) {
-//
-//        Row(
-//            modifier = Modifier
-//                .fillMaxWidth()
-//                .height(60.dp)
-//        ) {
-//            Text(
-//                text = "Queue",
-//                modifier
-//                    .align(Alignment.CenterVertically)
-//                    .padding(start = 15.dp),
-//                fontSize = 18.sp
-//            )
-//        }
-//
-//        LazyColumn {
-//            items(requests.value!!) { item ->
-//                QueueItem(item = item)
-//            }
-//        }
-//
-//    }
+    val requests = viewModel.listRequests.observeAsState()
+
+    requests.value?.forEach {
+        Log.d("TAGRequests", "${it.prompt}")
+    }
+
+    Column(
+        modifier = Modifier.fillMaxSize().background(Color.White)
+    ) {
+
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(60.dp)
+        ) {
+            Text(
+                text = "Queue",
+                modifier
+                    .align(Alignment.CenterVertically)
+                    .padding(start = 15.dp),
+                fontSize = 18.sp
+            )
+        }
+
+
+        if (requests.value != null) {
+            LazyColumn {
+                items(requests.value!!) { item ->
+                    QueueItem(item = item)
+                }
+            }
+        }
+
+
+    }
 
 }
 
@@ -97,7 +111,7 @@ fun QueueItem(modifier: Modifier = Modifier, item: TextRequest) {
             .fillMaxWidth()
             .height(120.dp),
         colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.background
+            containerColor = Color(0xFFF3F3F3)
         )
     ) {
 

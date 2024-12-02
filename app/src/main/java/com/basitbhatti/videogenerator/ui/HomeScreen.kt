@@ -36,7 +36,7 @@ import com.basitbhatti.videogenerator.viewmodel.MainViewModel
 
 @Composable
 fun HomeScreen(
-    modifier: Modifier = Modifier,
+    modifier: Modifier = Modifier.background(Color.White),
     viewModel: MainViewModel
 ) {
 

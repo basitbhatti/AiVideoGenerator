@@ -53,7 +53,7 @@ class MainViewModel(val repository: RequestRepository) : ViewModel() {
 
     }
 
-    private suspend fun updateRequestList() {
+    suspend fun updateRequestList() {
         _list.postValue(repository.getRequests())
     }
 
