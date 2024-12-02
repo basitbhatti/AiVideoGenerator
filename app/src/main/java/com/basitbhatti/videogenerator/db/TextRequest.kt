@@ -8,8 +8,8 @@ class TextRequest(
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
     val prompt: String,
-    val requestStatus: String,
+    var requestStatus: String,
     val status: String,
     val uuid: String,
-    val url: String? = null
+    var url: String? = null
 )

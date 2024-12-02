@@ -49,7 +49,8 @@ fun QueueScreen(modifier: Modifier = Modifier, viewModel: MainViewModel) {
 
     LaunchedEffect(Unit) {
         CoroutineScope(Dispatchers.IO).launch {
-            viewModel.updateRequestList()
+            viewModel.updateList()
+            viewModel.updateRequests()
         }
     }
 
@@ -60,7 +61,9 @@ fun QueueScreen(modifier: Modifier = Modifier, viewModel: MainViewModel) {
     }
 
     Column(
-        modifier = Modifier.fillMaxSize().background(Color.White)
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color.White)
     ) {
 
         Row(
@@ -95,6 +98,7 @@ fun QueueItem(modifier: Modifier = Modifier, item: TextRequest) {
     val context = LocalContext.current
 
     val statusBg = when (item.requestStatus) {
+
         STATUS_SUCCESS -> {
             Color(0xFFBDEEB9)
         }
@@ -106,6 +110,7 @@ fun QueueItem(modifier: Modifier = Modifier, item: TextRequest) {
         else -> {
             Color(0xFFEEB9B9)
         }
+
     }
 
     Card(
@@ -135,6 +140,7 @@ fun QueueItem(modifier: Modifier = Modifier, item: TextRequest) {
                 Text(text = item.prompt, fontSize = 16.sp, maxLines = 2)
                 Spacer(Modifier.height(10.dp))
                 Row {
+                    
                     Text(
                         text = item.requestStatus,
                         modifier

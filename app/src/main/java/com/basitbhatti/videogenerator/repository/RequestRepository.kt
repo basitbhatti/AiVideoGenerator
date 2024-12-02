@@ -8,6 +8,9 @@ class RequestRepository(val dao: RequestDao) {
     suspend fun insertRequest(request: TextRequest) {
         dao.insertRequest(request)
     }
+    suspend fun updateRequest(request: TextRequest) {
+        dao.updateRequest(request)
+    }
 
     suspend fun deleteRequest(request: TextRequest) {
         dao.deleteRequest(request)

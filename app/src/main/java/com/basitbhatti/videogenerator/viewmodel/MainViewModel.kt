@@ -11,6 +11,7 @@ import com.basitbhatti.videogenerator.model.TextRequestBody
 import com.basitbhatti.videogenerator.repository.RequestRepository
 import com.basitbhatti.videogenerator.utils.STATUS_FAILED
 import com.basitbhatti.videogenerator.utils.STATUS_IN_QUEUE
+import com.basitbhatti.videogenerator.utils.STATUS_SUCCESS
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
@@ -25,7 +26,7 @@ class MainViewModel(val repository: RequestRepository) : ViewModel() {
         viewModelScope.launch(Dispatchers.IO) {
             val request = createRequest(body)
             repository.insertRequest(request)
-            updateRequestList()
+            updateList()
         }
     }
 
@@ -48,23 +49,42 @@ class MainViewModel(val repository: RequestRepository) : ViewModel() {
                 TextRequest(0, body.text_prompt, STATUS_FAILED, "", "")
             }
         } catch (e: Exception) {
+            Log.d("TAGRESPONSE", "E : ${e}}")
+
             TextRequest(0, body.text_prompt, STATUS_FAILED, "", "")
         }
 
     }
 
-    suspend fun updateRequestList() {
+    suspend fun updateList() {
         _list.postValue(repository.getRequests())
     }
 
-    suspend fun updateRequests(){
-        viewModelScope.launch (Dispatchers.IO) {
+    suspend fun updateRequests() {
+        viewModelScope.launch(Dispatchers.IO) {
             val requests = repository.getRequests().filter { it.requestStatus == STATUS_IN_QUEUE }
 
-            for (req in requests){
+            for (req in requests) {
                 val response = textApi.getStatus(req.uuid)
-                if (response.isSuccessful){
-                    if (response.body().status.contains("queue"))
+                if (response.isSuccessful) {
+                    val item = response.body()!!
+                    val status = item.status
+                    if (status != null) {
+
+                        //in queue, success
+
+                        if (status.contains("in queue")){
+                            req.requestStatus = STATUS_IN_QUEUE
+                        } else if (status.contains("success")){
+                            req.requestStatus = STATUS_SUCCESS
+                            req.url = item.url
+                        } else {
+                            req.requestStatus = STATUS_FAILED
+                        }
+
+                        repository.updateRequest(req)
+
+                    }
                 }
             }
 

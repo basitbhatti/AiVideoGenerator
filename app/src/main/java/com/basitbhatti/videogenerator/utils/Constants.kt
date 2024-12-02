@@ -1,6 +1,6 @@
 package com.basitbhatti.videogenerator.utils
 
-const val API_KEY = "4fd67a787dmsh7f706757543ca43p15cc74jsn9cda9beb9be5"
+const val API_KEY = "f19a3b06e9msh94fcf577987033cp1a835cjsn4999c4f94547"
 
 const val STATUS_IN_QUEUE = "In Queue"
 const val STATUS_SUCCESS = "Success"
