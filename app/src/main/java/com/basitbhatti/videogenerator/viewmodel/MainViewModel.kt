@@ -57,4 +57,18 @@ class MainViewModel(val repository: RequestRepository) : ViewModel() {
         _list.postValue(repository.getRequests())
     }
 
+    suspend fun updateRequests(){
+        viewModelScope.launch (Dispatchers.IO) {
+            val requests = repository.getRequests().filter { it.requestStatus == STATUS_IN_QUEUE }
+
+            for (req in requests){
+                val response = textApi.getStatus(req.uuid)
+                if (response.isSuccessful){
+                    if (response.body().status.contains("queue"))
+                }
+            }
+
+        }
+    }
+
 }

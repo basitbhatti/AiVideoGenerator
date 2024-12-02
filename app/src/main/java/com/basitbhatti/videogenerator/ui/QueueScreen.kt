@@ -1,5 +1,8 @@
 package com.basitbhatti.videogenerator.ui
 
+import android.content.Intent
+import android.content.Intent.ACTION_VIEW
+import android.net.Uri
 import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -27,6 +30,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -73,7 +77,6 @@ fun QueueScreen(modifier: Modifier = Modifier, viewModel: MainViewModel) {
             )
         }
 
-
         if (requests.value != null) {
             LazyColumn {
                 items(requests.value!!) { item ->
@@ -81,8 +84,6 @@ fun QueueScreen(modifier: Modifier = Modifier, viewModel: MainViewModel) {
                 }
             }
         }
-
-
     }
 
 }
@@ -90,6 +91,8 @@ fun QueueScreen(modifier: Modifier = Modifier, viewModel: MainViewModel) {
 
 @Composable
 fun QueueItem(modifier: Modifier = Modifier, item: TextRequest) {
+
+    val context = LocalContext.current
 
     val statusBg = when (item.requestStatus) {
         STATUS_SUCCESS -> {
@@ -148,7 +151,9 @@ fun QueueItem(modifier: Modifier = Modifier, item: TextRequest) {
                         Row(
                             modifier = Modifier
                                 .clickable {
-
+                                    val intent = Intent(ACTION_VIEW)
+                                    intent.setData(Uri.parse(item.url))
+                                    context.startActivity(intent)
                                 }
                                 .clip(RoundedCornerShape(30.dp))
                                 .background(Color.LightGray)
