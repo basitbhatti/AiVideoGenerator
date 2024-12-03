@@ -106,6 +106,7 @@ fun HomeScreen(
                     } else {
                         viewModel.sendTextRequest(TextRequestBody(prompt))
                         showDialog = true
+
                     }
                 }
             ) {

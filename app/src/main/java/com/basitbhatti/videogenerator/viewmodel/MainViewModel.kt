@@ -30,6 +30,13 @@ class MainViewModel(val repository: RequestRepository) : ViewModel() {
         }
     }
 
+    fun deleteRequest(request: TextRequest){
+        viewModelScope.launch (Dispatchers.IO) {
+            repository.deleteRequest(request)
+            updateList()
+        }
+    }
+
     private suspend fun createRequest(body: TextRequestBody): TextRequest {
         return try {
             val response = textApi.sendTextRequest(body)
@@ -48,12 +55,16 @@ class MainViewModel(val repository: RequestRepository) : ViewModel() {
                 Log.d("TAGRESPONSE", "initial error : ${response}}")
                 TextRequest(0, body.text_prompt, STATUS_FAILED, "", "")
             }
+
+
+
         } catch (e: Exception) {
             Log.d("TAGRESPONSE", "E : ${e}}")
 
             TextRequest(0, body.text_prompt, STATUS_FAILED, "", "")
         }
 
+        updateList()
     }
 
     suspend fun updateList() {
@@ -67,15 +78,17 @@ class MainViewModel(val repository: RequestRepository) : ViewModel() {
             for (req in requests) {
                 val response = textApi.getStatus(req.uuid)
                 if (response.isSuccessful) {
+
                     val item = response.body()!!
                     val status = item.status
+
                     if (status != null) {
 
                         //in queue, success
 
-                        if (status.contains("in queue") or status.contains("submitted")){
+                        if (status.contains("in queue") or status.contains("submitted")) {
                             req.requestStatus = STATUS_IN_QUEUE
-                        } else if (status.contains("success")){
+                        } else if (status.contains("success")) {
                             req.requestStatus = STATUS_SUCCESS
                             req.url = item.url
                         } else {

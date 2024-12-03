@@ -8,9 +8,11 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -83,7 +85,9 @@ fun QueueScreen(modifier: Modifier = Modifier, viewModel: MainViewModel) {
         if (requests.value != null) {
             LazyColumn {
                 items(requests.value!!) { item ->
-                    QueueItem(item = item)
+                    QueueItem(item = item, onDelete = {
+                        viewModel.deleteRequest(item)
+                    })
                 }
             }
         }
@@ -93,7 +97,7 @@ fun QueueScreen(modifier: Modifier = Modifier, viewModel: MainViewModel) {
 
 
 @Composable
-fun QueueItem(modifier: Modifier = Modifier, item: TextRequest) {
+fun QueueItem(modifier: Modifier = Modifier, item: TextRequest, onDelete: () -> Unit) {
 
     val context = LocalContext.current
 
@@ -139,8 +143,11 @@ fun QueueItem(modifier: Modifier = Modifier, item: TextRequest) {
             Column {
                 Text(text = item.prompt, fontSize = 16.sp, maxLines = 2)
                 Spacer(Modifier.height(10.dp))
-                Row {
-                    
+                Row (
+                    modifier = Modifier.height(30.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+
                     Text(
                         text = item.requestStatus,
                         modifier
@@ -180,12 +187,26 @@ fun QueueItem(modifier: Modifier = Modifier, item: TextRequest) {
                                     .padding(horizontal = 5.dp),
                                 fontSize = 12.sp
                             )
-
                         }
-
-
                     }
 
+                    Box(
+                        modifier = Modifier
+                            .fillMaxHeight()
+                            .width(24.dp)
+                            .padding(start = 5.dp),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Image(
+                            painter = painterResource(R.drawable.delete),
+                            contentDescription = "Play",
+                            modifier = Modifier
+                                .size(18.dp)
+                                .clickable {
+                                    onDelete()
+                                }
+                        )
+                    }
 
                 }
             }
@@ -204,9 +225,12 @@ private fun Preview() {
         TextRequest(
             0,
             "Create an ad video for my clothing brand",
-            STATUS_IN_QUEUE,
+            STATUS_SUCCESS,
             "inQueue",
             "1234"
-        )
+        ),
+        onDelete = {
+
+        }
     )
 }

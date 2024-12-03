@@ -36,6 +36,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             AiVideoGeneratorTheme {
+
                 val dao = RequestDatabase.getInstance(this@MainActivity).dao()
                 val repo = RequestRepository(dao)
 
@@ -57,7 +58,6 @@ class MainActivity : ComponentActivity() {
                             NavGraph(navController = navController, viewModel = viewModel)
                         }
                     }
-
                 }
             }
         }
